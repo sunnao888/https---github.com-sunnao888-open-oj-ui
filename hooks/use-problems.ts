@@ -109,13 +109,22 @@ export function useProblem(id: string) {
   const [error, setError] = useState<string | null>(null)
 
   const fetchProblem = useCallback(async () => {
-    if (!id) return
+    if (!id) {
+      return
+    }
+
+    const numericId = parseInt(id)
+    if (isNaN(numericId)) {
+      setError('无效的题目ID')
+      setLoading(false)
+      return
+    }
 
     try {
       setLoading(true)
       setError(null)
 
-      const question = await questionApi.get(parseInt(id))
+      const question = await questionApi.get(numericId)
       const adaptedProblem = adaptQuestionToProblem(question)
       
       setProblem(adaptedProblem)
