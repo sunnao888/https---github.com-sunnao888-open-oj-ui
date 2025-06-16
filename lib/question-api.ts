@@ -33,7 +33,7 @@ export const questionApi = {
 
   // 获取题目详情 - 不需要认证
   async get(id: number): Promise<QuestionResp> {
-    return apiGet<QuestionResp>(`/app-api/biz/question/get?id=${id}`, false)
+    return apiGet<QuestionResp>(`/biz/question/get?id=${id}`, false)
   },
 
   // 获取题目分页列表 - 不需要认证
@@ -47,7 +47,7 @@ export const questionApi = {
       query.append('title', params.title)
     }
 
-    return apiGet<PageResult<QuestionResp>>(`/app-api/biz/question/page?${query.toString()}`, false)
+    return apiGet<PageResult<QuestionResp>>(`/biz/question/page?${query.toString()}`, false)
   },
 
   // 导出题目Excel

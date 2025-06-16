@@ -146,7 +146,7 @@ export default function HomePage() {
           <Table>
             <TableHeader>
               <TableRow className="sticky top-0 bg-background z-10">
-                <TableHead className="w-[80px]">状态</TableHead>
+                <TableHead className="w-[60px]">状态</TableHead>
                 <TableHead>题目</TableHead>
                 <TableHead className="text-center">难度</TableHead>
                 <TableHead className="text-center">通过率</TableHead>
@@ -254,7 +254,6 @@ export default function HomePage() {
           </div>
         )}
       </main>
-      <Footer />
     </div>
   )
 }

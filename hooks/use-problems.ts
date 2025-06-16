@@ -104,6 +104,7 @@ export function useProblems(options: UseProblemsOptions = {}): UseProblemsResult
 
 // 获取单个题目的hook
 export function useProblem(id: string) {
+  console.log("id", id)
   const [problem, setProblem] = useState<Problem | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)

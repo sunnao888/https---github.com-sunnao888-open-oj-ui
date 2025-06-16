@@ -44,7 +44,7 @@ export interface PermissionInfo {
 export const authApi = {
   // 登录
   async login(data: LoginRequest): Promise<LoginResponse> {
-    const response = await apiPost<LoginResponse>('/admin-api/system/auth/login', data)
+    const response = await apiPost<LoginResponse>('/system/auth/login', data)
     // 登录成功后保存token
     if (response.accessToken) {
       localStorage.setItem('access_token', response.accessToken)
@@ -55,7 +55,7 @@ export const authApi = {
 
   // 注册
   async register(data: RegisterRequest): Promise<LoginResponse> {
-    const response = await apiPost<LoginResponse>('/admin-api/system/auth/register', data)
+    const response = await apiPost<LoginResponse>('/system/auth/register', data)
     // 注册成功后保存token
     if (response.accessToken) {
       localStorage.setItem('access_token', response.accessToken)
@@ -66,7 +66,7 @@ export const authApi = {
 
   // 登出
   async logout(): Promise<boolean> {
-    const response = await apiPost<boolean>('/admin-api/system/auth/logout')
+    const response = await apiPost<boolean>('/system/auth/logout')
     // 清除本地token
     localStorage.removeItem('access_token')
     localStorage.removeItem('refresh_token')
@@ -75,12 +75,12 @@ export const authApi = {
 
   // 获取用户权限信息
   async getPermissionInfo(): Promise<PermissionInfo> {
-    return apiGet<PermissionInfo>('/admin-api/system/auth/get-permission-info', true)
+    return apiGet<PermissionInfo>('/system/auth/get-permission-info', true)
   },
 
   // 刷新token
   async refreshToken(refreshToken: string): Promise<LoginResponse> {
-    const response = await apiPost<LoginResponse>(`/admin-api/system/auth/refresh-token?refreshToken=${refreshToken}`)
+    const response = await apiPost<LoginResponse>(`/system/auth/refresh-token?refreshToken=${refreshToken}`)
     if (response.accessToken) {
       localStorage.setItem('access_token', response.accessToken)
       localStorage.setItem('refresh_token', response.refreshToken)

@@ -1,13 +1,13 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, use } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/components/auth-provider"
 import { useProblem } from "@/hooks/use-problems"
 import type { Problem } from "@/types/problem"
 import ProblemDifficultyBadge from "@/components/problem-difficulty-badge"
 import { Badge } from "@/components/ui/badge"
-import CodeEditor, { type SupportedLanguage } from "@/components/code-editor"
+import MonacoCodeEditor, { type SupportedLanguage } from "@/components/monaco-code-editor"
 import { Button } from "@/components/ui/button"
 import { Play, Upload, Settings2, Loader2, AlertCircle, ArrowLeft } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -26,10 +26,16 @@ const languageOptions: { value: SupportedLanguage; label: string }[] = [
   { value: "go", label: "Go" },
 ]
 
-export default function ProblemSolvingPageClient({ params }: { params: { id: string } }) {
+export default function ProblemSolvingPageClient({ params }: { params: Promise<{ id: string }> | { id: string } }) {
+  // 使用 React 的 use hook 来处理 Promise 参数
+  const resolvedParams = params instanceof Promise ? use(params) : params
+  
   const router = useRouter()
   const { isLoggedIn, loading: authLoading } = useAuth()
-  const { problem, loading: problemLoading, error, refresh } = useProblem(params.id)
+  console.log("resolvedParams", resolvedParams)
+  console.log("id", resolvedParams.id)
+  const { problem, loading: problemLoading, error, refresh } = useProblem(resolvedParams.id)
+
   const { toast } = useToast()
   
   const [selectedLanguage, setSelectedLanguage] = useState<SupportedLanguage>("javascript")
@@ -144,7 +150,7 @@ export default function ProblemSolvingPageClient({ params }: { params: { id: str
       <div className="flex flex-col h-[calc(100vh-3.5rem)] items-center justify-center">
         <div className="text-center space-y-4">
           <h2 className="text-xl font-semibold">题目不存在</h2>
-          <p className="text-muted-foreground">找不到ID为 {params.id} 的题目</p>
+          <p className="text-muted-foreground">找不到ID为 {resolvedParams.id} 的题目</p>
           <Button variant="outline" asChild>
             <Link href="/">返回首页</Link>
           </Button>
@@ -175,9 +181,6 @@ export default function ProblemSolvingPageClient({ params }: { params: { id: str
             </div>
           </div>
         </div>
-        <Button variant="ghost" size="icon">
-          <Settings2 className="h-5 w-5" />
-        </Button>
       </div>
       
       <div className="flex flex-grow overflow-hidden">
@@ -197,7 +200,7 @@ export default function ProblemSolvingPageClient({ params }: { params: { id: str
           </TabsContent>
           <TabsContent value="solution" className="flex-grow overflow-hidden m-0 p-0">
             <ScrollArea className="h-full">
-              <CodeEditor
+              <MonacoCodeEditor
                 initialCode={getSolutionCodeForLanguage(selectedLanguage)}
                 language={selectedLanguage}
                 readOnly={true}
@@ -224,10 +227,10 @@ export default function ProblemSolvingPageClient({ params }: { params: { id: str
           </div>
 
           <div className="flex-grow p-1">
-            <CodeEditor
+            <MonacoCodeEditor
               initialCode={userCode}
               language={selectedLanguage}
-              onCodeChange={(newCode) => setUserCode(newCode)}
+              onCodeChange={(newCode: string) => setUserCode(newCode)}
             />
           </div>
 
